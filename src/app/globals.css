@@ -16,7 +16,7 @@
 }
 
 body {
-  background: #efeae0;
+  background: #fbf8f3;   /* 기존 #efeae0 → 앱 내부색과 동일하게 */
   color: var(--color-dark);
   font-family: "Gowun Dodum", sans-serif;
 }
