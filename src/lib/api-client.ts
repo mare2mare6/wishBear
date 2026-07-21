@@ -1,5 +1,13 @@
 import type { ApiRoom, CreateRoomResponse } from "./types";
 
+export type ScrapedProduct = {
+  title: string;
+  price: string;
+  imageUrl: string;
+  sourceUrl: string;
+  usedFallback: boolean;
+};
+
 async function handle<T>(res: Response): Promise<T> {
   const data = await res.json().catch(() => null);
   if (!res.ok) {
@@ -24,14 +32,30 @@ export async function getRoom(roomId: string, guestName?: string) {
   return handle<ApiRoom>(res);
 }
 
-export async function addItem(roomId: string, ownerToken: string, link: string) {
-  const res = await fetch(`/api/rooms/${roomId}/items`, {
+export async function previewItem(roomId: string, ownerToken: string, link: string) {
+  const res = await fetch(`/api/rooms/${roomId}/items/preview`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "x-owner-token": ownerToken,
     },
     body: JSON.stringify({ link }),
+  });
+  return handle<ScrapedProduct>(res);
+}
+
+export async function addItem(
+  roomId: string,
+  ownerToken: string,
+  data: { link: string; title: string; price: string; imageUrl: string }
+) {
+  const res = await fetch(`/api/rooms/${roomId}/items`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-owner-token": ownerToken,
+    },
+    body: JSON.stringify(data),
   });
   return handle(res);
 }

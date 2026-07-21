@@ -13,6 +13,7 @@ import { CoGiftAlertModal } from "@/components/CoGiftAlertModal";
 import { THEME } from "@/lib/theme";
 import {
   getRoom,
+  previewItem,
   addItem,
   removeItem,
   addBan,
@@ -39,7 +40,6 @@ export default function BoardPage() {
 
   const [modal, setModal] = useState<ModalType>(null);
   const [activeItem, setActiveItem] = useState<ApiItem | null>(null);
-  const [scraping, setScraping] = useState(false);
   const [toast, setToast] = useState("");
 
   const showToast = useCallback((msg: string) => {
@@ -79,19 +79,22 @@ export default function BoardPage() {
   const mode: "owner" | "guestName" | "friend" =
     isOwner && !previewFriend ? "owner" : guestName ? "friend" : "guestName";
 
-  const handleAddWishSubmit = async (link: string) => {
-    if (!link.trim() || !ownerToken) return;
-    setScraping(true);
-    try {
-      await addItem(roomId, ownerToken, link.trim());
-      await refresh();
-      showToast("상품이 등록되었습니다!");
-      setModal(null);
-    } catch (e) {
-      showToast(e instanceof Error ? e.message : "등록에 실패했어요.");
-    } finally {
-      setScraping(false);
-    }
+  const handleAddWishPreview = async (link: string) => {
+    if (!ownerToken) throw new Error("권한이 없어요.");
+    return previewItem(roomId, ownerToken, link);
+  };
+
+  const handleAddWishSubmit = async (data: {
+    link: string;
+    title: string;
+    price: string;
+    imageUrl: string;
+  }) => {
+    if (!ownerToken) throw new Error("권한이 없어요.");
+    await addItem(roomId, ownerToken, data);
+    await refresh();
+    showToast("상품이 등록되었습니다!");
+    setModal(null);
   };
 
   const handleAddBanSubmit = async (text: string) => {
@@ -149,7 +152,7 @@ export default function BoardPage() {
   const handleLikeTypeConfirm = async (choice: "solo" | "together") => {
     if (!activeItem) return;
     try {
-      await reserveItem(roomId, activeItem.id, guestName || "곰돌이", choice);
+      await reserveItem(roomId, activeItem.id, guestName || "익명", choice);
       await refresh();
     } catch (e) {
       showToast(e instanceof Error ? e.message : "찜하기에 실패했어요.");
@@ -162,7 +165,7 @@ export default function BoardPage() {
   const handleCoGiftConfirm = async () => {
     if (!activeItem) return;
     try {
-      await reserveItem(roomId, activeItem.id, guestName || "곰돌이", "together");
+      await reserveItem(roomId, activeItem.id, guestName || "익명", "together");
       await refresh();
     } catch (e) {
       showToast(e instanceof Error ? e.message : "찜하기에 실패했어요.");
@@ -247,7 +250,11 @@ export default function BoardPage() {
       )}
 
       {modal === "addWish" && (
-        <AddWishScreen onClose={() => setModal(null)} onSubmit={handleAddWishSubmit} loading={scraping} />
+        <AddWishScreen
+          onClose={() => setModal(null)}
+          onPreview={handleAddWishPreview}
+          onSubmit={handleAddWishSubmit}
+        />
       )}
       {modal === "addBan" && (
         <AddBanScreen onClose={() => setModal(null)} onSubmit={handleAddBanSubmit} />

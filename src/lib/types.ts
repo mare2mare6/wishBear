@@ -8,6 +8,7 @@ export type ApiItem = {
   sourceUrl: string;
   mode: ItemMode;
   reservedCount: number;
+  reservedNames: string[];
   // 요청자 본인이 이미 이 상품을 찜했는지 (같은 guestName 기준, 데모 수준의 식별)
   reservedByMe: boolean;
 };

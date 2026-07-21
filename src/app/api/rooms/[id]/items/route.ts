@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { scrapeProduct } from "@/lib/scrape";
 import { getOwnerTokenFromRequest } from "@/lib/authz";
 import { serializeItem } from "@/lib/serialize";
 
+/**
+ * 최종 저장 엔드포인트. 프론트에서 링크 미리보기(/preview) 결과를
+ * 그대로 보내거나, 오너가 제목/가격을 수정한 값을 보내면 그대로 저장합니다.
+ */
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -21,19 +24,25 @@ export async function POST(
 
   const body = await request.json().catch(() => null);
   const link = typeof body?.link === "string" ? body.link.trim() : "";
-  if (!link) {
-    return NextResponse.json({ error: "링크를 입력해주세요." }, { status: 400 });
-  }
+  const title = typeof body?.title === "string" ? body.title.trim() : "";
+  const price = typeof body?.price === "string" ? body.price.trim() : "";
+  const imageUrl = typeof body?.imageUrl === "string" ? body.imageUrl.trim() : "";
 
-  const scraped = await scrapeProduct(link);
+  if (!link || !title || !price) {
+    return NextResponse.json(
+      { error: "링크, 제목, 가격을 모두 입력해주세요." },
+      { status: 400 }
+    );
+  }
 
   const item = await prisma.item.create({
     data: {
       roomId: room.id,
-      title: scraped.title,
-      price: scraped.price,
-      imageUrl: scraped.imageUrl,
-      sourceUrl: scraped.sourceUrl,
+      title,
+      price,
+      imageUrl:
+        imageUrl || "https://placehold.co/400x400/EFE7D6/C9BBA0?text=Product+Image",
+      sourceUrl: link,
     },
     include: { reservations: true },
   });

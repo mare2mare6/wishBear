@@ -89,9 +89,11 @@ export function FriendProductCard({
         </ClayButton>
       </div>
 
-      {item.mode === "co-gift" && (
+      {item.mode === "co-gift" && item.reservedNames.length > 0 && (
         <p className="mt-1.5 text-xs text-center" style={{ color: THEME.subText }}>
-          곰돌이님 외 {item.reservedCount}명이 찜했어요!
+          {item.reservedCount === 1
+            ? `${item.reservedNames[0]}님이 찜했어요!`
+            : `${item.reservedNames[0]}님 외 ${item.reservedCount - 1}명이 찜했어요!`}
         </p>
       )}
     </div>

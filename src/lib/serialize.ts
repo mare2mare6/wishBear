@@ -7,14 +7,12 @@ export function serializeItem(
   item: ItemWithReservations,
   guestName: string | null
 ): ApiItem {
-  const togetherCount = item.reservations.filter(
-    (r) => r.type === "TOGETHER"
-  ).length;
+  const togetherReservations = item.reservations.filter((r) => r.type === "TOGETHER");
   const soloReservation = item.reservations.find((r) => r.type === "SOLO");
 
   let mode: ItemMode = "none";
   if (soloReservation) mode = "solo";
-  else if (togetherCount > 0) mode = "co-gift";
+  else if (togetherReservations.length > 0) mode = "co-gift";
 
   const reservedByMe = guestName
     ? item.reservations.some((r) => r.guestName === guestName)
@@ -27,7 +25,8 @@ export function serializeItem(
     imageUrl: item.imageUrl,
     sourceUrl: item.sourceUrl,
     mode,
-    reservedCount: togetherCount,
+    reservedCount: togetherReservations.length,
+    reservedNames: togetherReservations.map((r) => r.guestName),
     reservedByMe,
   };
 }
