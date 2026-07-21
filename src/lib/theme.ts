@@ -16,5 +16,5 @@ export const THEME = {
 
 export const IMAGES = {
   // 데모용 임시 이미지. 준비되면 이 두 링크만 교체하면 전체 화면에 반영됩니다.
-  bear: "https://placehold.co/500x600/FBF8F3/E2DDD0?text=Bear+Illustration",
+  bear: "/boxbear.png",
 };

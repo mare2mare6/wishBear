@@ -22,7 +22,7 @@ export type ScrapedProduct = {
 };
 
 const FALLBACK_IMAGE =
-  "https://placehold.co/400x400/EFE7D6/C9BBA0?text=Product+Image";
+  "/boxbear1.png";
 const FALLBACK_TITLE = "";
 const FALLBACK_PRICE = "";
 
