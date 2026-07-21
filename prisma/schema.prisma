@@ -1,0 +1,60 @@
+// Wish Bear — Prisma schema (PostgreSQL / Supabase)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  // Supabase: 앱 런타임에서는 pooled connection(6543, pgbouncer) 사용
+  url       = env("DATABASE_URL")
+  // 마이그레이션 시에는 direct connection(5432) 사용 (Supabase 권장 패턴)
+  directUrl = env("DIRECT_URL")
+}
+
+model Room {
+  id         String   @id @default(cuid())
+  // 방 주인만 아는 비밀 토큰. 프론트에서 localStorage에 저장해 "오너 여부"를 판별.
+  ownerToken String   @unique @default(cuid())
+  nickname   String
+  birthday   String?
+  createdAt  DateTime @default(now())
+
+  items Item[]
+  bans  Ban[]
+}
+
+model Item {
+  id        String   @id @default(cuid())
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  title     String
+  price     String
+  imageUrl  String
+  sourceUrl String
+  createdAt DateTime @default(now())
+
+  reservations Reservation[]
+}
+
+model Ban {
+  id        String   @id @default(cuid())
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  text      String
+  createdAt DateTime @default(now())
+}
+
+enum ReservationType {
+  SOLO
+  TOGETHER
+}
+
+model Reservation {
+  id        String          @id @default(cuid())
+  itemId    String
+  item      Item            @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  guestName String          @default("익명")
+  type      ReservationType
+  createdAt DateTime        @default(now())
+}

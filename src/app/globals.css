@@ -1,0 +1,26 @@
+@import url("https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap");
+@import "tailwindcss";
+
+:root {
+  --color-bg: #fbf8f3; /* Milk Pudding */
+  --color-accent: #ffcc74; /* Mango Beige */
+  --color-accent-shadow: #e0a94a;
+  --color-heading: #9c7a4a;
+  --color-sub: #bba98a;
+  --color-input-bg: #f1e9d8;
+  --color-card-stroke: #efe7d6;
+  --color-img-placeholder: #e2ddd0;
+  --color-ban-bg: #fbeaee;
+  --color-ban-heading: #c0435a;
+  --color-dark: #5b4a34;
+}
+
+body {
+  background: #efeae0;
+  color: var(--color-dark);
+  font-family: "Gowun Dodum", sans-serif;
+}
+
+.font-display {
+  font-family: "Jua", sans-serif;
+}
