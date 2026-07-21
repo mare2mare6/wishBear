@@ -36,13 +36,12 @@ export function ClayButton({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`font-display w-full rounded-full font-bold transition-transform active:translate-y-[2px] ${
+      className={`font-display w-full rounded-full font-bold ${
         small ? "py-3 text-sm" : "py-4 text-base"
       }`}
       style={{
         color: THEME.dark,
         background: THEME.accent,
-        boxShadow: `0 4px 0 ${THEME.accentShadow}`,
         opacity: disabled ? 0.6 : 1,
         ...style,
       }}
@@ -67,13 +66,12 @@ export function GhostButton({
     <button
       type="button"
       onClick={onClick}
-      className={`font-display w-full rounded-full font-bold transition-transform active:translate-y-[2px] ${
+      className={`font-display w-full rounded-full font-bold ${
         small ? "py-3 text-sm" : "py-4 text-base"
       }`}
       style={{
         color: THEME.heading,
         background: THEME.inputBg,
-        boxShadow: `0 3px 0 ${THEME.cardStroke}`,
         ...style,
       }}
     >
@@ -121,7 +119,7 @@ export function Toast({ message }: { message: string }) {
   if (!message) return null;
   return (
     <div
-      className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-full text-sm text-white shadow-lg"
+      className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-full text-sm text-white"
       style={{ background: THEME.dark }}
     >
       {message}
@@ -129,29 +127,24 @@ export function Toast({ message }: { message: string }) {
   );
 }
 
+// 팝업/모달은 항상 브라우저 화면(뷰포트) 기준 정중앙에 뜨도록
+// absolute가 아닌 fixed로 배치합니다. (스크롤 위치나 폰 프레임 높이에 영향받지 않음)
 export function ModalOverlay({
   children,
   onClose,
-  center,
 }: {
   children: React.ReactNode;
   onClose?: () => void;
-  center?: boolean;
 }) {
   return (
     <div
-      className="absolute inset-0 z-40 flex"
-      style={{
-        background: "rgba(60,45,25,0.35)",
-        alignItems: center ? "center" : "stretch",
-        justifyContent: "center",
-        padding: center ? "24px" : 0,
-      }}
+      className="fixed inset-0 z-50 flex items-center justify-center px-6"
+      style={{ background: "rgba(60,45,25,0.35)" }}
       onClick={(e) => {
         if (e.target === e.currentTarget && onClose) onClose();
       }}
     >
-      {children}
+      <div className="w-full max-w-md">{children}</div>
     </div>
   );
 }

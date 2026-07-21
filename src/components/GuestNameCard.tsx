@@ -20,7 +20,7 @@ export function GuestNameCard({
       <Logo />
       <div
         className="mt-16 rounded-3xl p-7"
-        style={{ background: THEME.white, boxShadow: "0 10px 30px rgba(0,0,0,0.06)" }}
+        style={{ background: THEME.white }}
       >
         <h2 className="font-display text-xl text-center" style={{ color: THEME.heading }}>
           이름을 적어주세요!

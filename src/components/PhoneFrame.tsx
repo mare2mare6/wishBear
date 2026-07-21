@@ -13,7 +13,7 @@ export function PhoneFrame({
   return (
     <div className="w-full min-h-screen flex items-center justify-center py-6 px-3">
       <div
-        className="relative w-full max-w-md min-h-[780px] rounded-[2.5rem] overflow-hidden shadow-2xl"
+        className="relative w-full max-w-md min-h-[780px] rounded-[2.5rem] overflow-hidden"
         style={{ background: THEME.bg }}
       >
         {children}

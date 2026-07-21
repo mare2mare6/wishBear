@@ -11,7 +11,7 @@ export function CoGiftAlertModal({
   onConfirm: () => void;
 }) {
   return (
-    <ModalOverlay center onClose={onClose}>
+    <ModalOverlay onClose={onClose}>
       <div
         className="w-full rounded-3xl p-7"
         style={{ background: THEME.white }}
