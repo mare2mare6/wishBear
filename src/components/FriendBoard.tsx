@@ -13,6 +13,7 @@ export function FriendBoard({
   onView,
   onLikeClick,
   onCreateOwn,
+  isOwnerView,
 }: {
   ownerName: string;
   items: ApiItem[];
@@ -20,6 +21,7 @@ export function FriendBoard({
   onView: (item: ApiItem) => void;
   onLikeClick: (item: ApiItem) => void;
   onCreateOwn: () => void;
+  isOwnerView?: boolean;
 }) {
   return (
     <div className="flex flex-col min-h-full px-6 pb-10">
@@ -33,6 +35,11 @@ export function FriendBoard({
           <br />
           선물해보세요!
         </p>
+        {isOwnerView && (
+          <p className="mt-2 text-xs" style={{ color: THEME.subText }}>
+            내 레지스트리 미리보기예요. 내 상품은 찜할 수 없어요.
+          </p>
+        )}
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-4">
@@ -42,6 +49,7 @@ export function FriendBoard({
             item={item}
             onView={onView}
             onLikeClick={onLikeClick}
+            isOwnerView={isOwnerView}
           />
         ))}
         {items.length === 0 && (

@@ -141,13 +141,14 @@ export default function BoardPage() {
   };
 
   const handleLikeClick = (item: ApiItem) => {
-    setActiveItem(item);
-    if (item.mode === "co-gift" && !item.reservedByMe) {
-      setModal("coGiftAlert");
-    } else if (item.mode === "none") {
-      setModal("likeType");
-    }
-  };
+  if (isOwner) return; // 내 방 미리보기 중에는 내 상품을 찜할 수 없음
+  setActiveItem(item);
+  if (item.mode === "co-gift" && !item.reservedByMe) {
+    setModal("coGiftAlert");
+  } else if (item.mode === "none") {
+    setModal("likeType");
+  }
+};
 
   const handleLikeTypeConfirm = async (choice: "solo" | "together") => {
     if (!activeItem) return;
@@ -239,13 +240,14 @@ export default function BoardPage() {
       )}
 
       {mode === "friend" && (
-        <FriendBoard
+      <FriendBoard
           ownerName={room.nickname}
           items={room.items}
           bans={room.bans}
           onView={handleView}
           onLikeClick={handleLikeClick}
           onCreateOwn={handleCreateOwnOrExitPreview}
+          isOwnerView={isOwner}
         />
       )}
 

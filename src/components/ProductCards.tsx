@@ -39,27 +39,30 @@ export function FriendProductCard({
   item,
   onView,
   onLikeClick,
+  isOwnerView,
 }: {
   item: ApiItem;
   onView: (item: ApiItem) => void;
   onLikeClick: (item: ApiItem) => void;
+  isOwnerView?: boolean;
 }) {
   const isMineAndDone =
     (item.mode === "solo" || item.mode === "co-gift") && item.reservedByMe;
 
   // 다른 사람이 이미 혼자 찜한 상품 (나는 아님)
-  const takenByOther = item.mode === "solo" && !item.reservedByMe;
+  const takenByOther = item.mode === "solo" && !item.reservedByMe && !isOwnerView;
 
-  const likeLabel =
-    item.mode === "solo"
+  const likeLabel = isOwnerView
+    ? "내 상품이에요"
+    : item.mode === "solo"
+    ? "찜 완료"
+    : item.mode === "co-gift"
+    ? isMineAndDone
       ? "찜 완료"
-      : item.mode === "co-gift"
-      ? isMineAndDone
-        ? "찜 완료"
-        : "나도 찜하기"
-      : "찜하기";
+      : "나도 찜하기"
+    : "찜하기";
 
-  const likeDisabled = item.mode === "solo" || isMineAndDone;
+  const likeDisabled = isOwnerView || item.mode === "solo" || isMineAndDone;
 
   return (
     <div>
