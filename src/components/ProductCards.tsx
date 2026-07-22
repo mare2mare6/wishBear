@@ -47,6 +47,9 @@ export function FriendProductCard({
   const isMineAndDone =
     (item.mode === "solo" || item.mode === "co-gift") && item.reservedByMe;
 
+  // 다른 사람이 이미 혼자 찜한 상품 (나는 아님)
+  const takenByOther = item.mode === "solo" && !item.reservedByMe;
+
   const likeLabel =
     item.mode === "solo"
       ? "찜 완료"
@@ -60,7 +63,21 @@ export function FriendProductCard({
 
   return (
     <div>
-      <ProductImage src={item.imageUrl} alt={item.title} />
+      <div className="relative">
+        <ProductImage src={item.imageUrl} alt={item.title} />
+        {takenByOther && (
+          <div
+            className="absolute inset-0 rounded-2xl flex items-center justify-center text-center px-3"
+            style={{ background: "rgba(0,0,0,0.15)" }}
+          >
+            <span className="text-sm font-bold text-white leading-snug">
+              이미 다른 분이
+              <br />
+              찜한 상품이에요
+            </span>
+          </div>
+        )}
+      </div>
       <p className="mt-2 text-sm leading-snug" style={{ color: THEME.dark }}>
         {item.title}
       </p>
