@@ -35,6 +35,23 @@ export async function POST(
     );
   }
 
+
+  const duplicate = await prisma.item.findFirst({
+  where: {
+    roomId: room.id,
+    OR: [
+      { sourceUrl: { equals: link, mode: "insensitive" } },
+      { title: { equals: title, mode: "insensitive" } },
+    ],
+  },
+});
+if (duplicate) {
+  return NextResponse.json(
+    { error: "이미 등록된 상품이에요." },
+    { status: 409 }
+  );
+}
+
   const item = await prisma.item.create({
     data: {
       roomId: room.id,

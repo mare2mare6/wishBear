@@ -10,9 +10,21 @@ export function AddBanScreen({
   onSubmit,
 }: {
   onClose: () => void;
-  onSubmit: (text: string) => void;
+  onSubmit: (text: string) => Promise<void>;
 }) {
   const [text, setText] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!text.trim() || loading) return;
+    setLoading(true);
+    try {
+      await onSubmit(text.trim());
+      setText("");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-40 flex justify-center" style={{ background: THEME.bg }}>
@@ -41,12 +53,8 @@ export function AddBanScreen({
         <div className="flex-1" />
 
         <div className="pb-10">
-          <ClayButton
-            onClick={() => {
-              if (text.trim()) onSubmit(text.trim());
-            }}
-          >
-            등록
+          <ClayButton onClick={handleSubmit} disabled={loading || !text.trim()}>
+            {loading ? "등록 중..." : "등록"}
           </ClayButton>
         </div>
       </div>

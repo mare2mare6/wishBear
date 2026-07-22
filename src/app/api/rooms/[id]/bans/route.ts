@@ -23,6 +23,16 @@ export async function POST(
     return NextResponse.json({ error: "내용을 입력해주세요." }, { status: 400 });
   }
 
+  const duplicate = await prisma.ban.findFirst({
+  where: { roomId: room.id, text: { equals: text, mode: "insensitive" } },
+});
+if (duplicate) {
+  return NextResponse.json(
+    { error: "이미 등록된 밴 목록이에요." },
+    { status: 409 }
+  );
+}
+
   const ban = await prisma.ban.create({
     data: { roomId: room.id, text },
   });
